@@ -1,0 +1,116 @@
+#define NOMINMAX
+#include "WasapiMixer.h"
+#include "Utils.h"
+#include "Tray.h"
+#include <windows.h>
+#include <iostream>
+#include <vector>
+#include <thread>
+#include <array>
+#pragma comment(lib, "user32.lib")
+#pragma comment(lib, "ole32.lib")
+
+int main() {
+    // 1. Initialize and declare variables
+    std::string soundbiteBasePath = "C:\\coding\\cpp_soundboard\\Resources\\soundboard\\soundbites\\";
+    std::string soundbitePaths[g_soundbiteCount] = {
+        "mbappe-special.wav", // 0 1
+        "windows-xp.wav", // 1 2
+        "florida.wav", // 2 3
+        "300-million.wav", // 3 4
+        "pain.wav", // 4 5
+        "chew.wav", // 5 Q
+        "grenade.wav", // 6 W
+        "Turnt-1.wav", // 7 E
+        "Turnt-2.wav", // 8 R
+        "Turnt-3.wav", // 9 T
+        "grenada.wav", // 10 A
+        "ac130.wav", // 11 S
+        "camping.wav", // 12 D
+        "noobtubed.wav", // 13 F
+        "", // 14 G
+        "dolphin.wav", // 15 Z
+        "2000-years.wav", // 16 X
+        "---", // 17 C
+        "dickie-allen.wav", // 18 V
+        "" // 19 B
+    };
+    WasapiMixer mixer;
+    int soundbiteIndex = -1;
+    CoInitializeEx(NULL, COINIT_MULTITHREADED);
+
+    // 2. Load soundbites into memory and populate global tray variables for soundbite names
+    for (int i = 0; i < g_soundbiteCount; i++) {
+        std::vector<float> soundbiteData = LoadWavFile(soundbiteBasePath + soundbitePaths[i]);
+        mixer.LoadSoundbite(i, soundbiteData);
+    }
+
+    // 3. Start mixer background thread (captures Mic and routes to VB-Cable)
+    if (!mixer.Start(L"CABLE Input")) {
+        std::cerr << "Failed to start WasapiMixer! Make sure VB-Cable is active.\n";
+        system("pause");
+        return -1;
+    }
+
+    // 4. Initialize tray loop and tray path names to populate tray menu with soundbite names
+    g_soundbiteNames.resize(g_soundbiteCount);
+    g_soundbiteKeys.resize(g_soundbiteCount);
+    for (int i = 0; i < g_soundbiteCount; i++) {
+        std::string soundbitePath = soundbitePaths[i].substr(0, soundbitePaths[i].length() - 4);
+        std::wstring w_soundbitePath = StringToWString(soundbitePath);
+        std::wstring w_fullSoundbitePath = g_soundbiteKeys[i] + w_soundbitePath;
+        g_soundbiteNames[i] = w_fullSoundbitePath;
+    }
+    std::thread trayThread(TrayLoop);
+
+    // 5. Main event loop waits for hotkeys
+    while (true) {
+        if (!g_running.load()) {
+            mixer.Stop();
+            CoUninitialize();
+            if (g_trayThreadId != 0) {
+                PostThreadMessage(g_trayThreadId, WM_QUIT, 0, 0);
+            }
+            if (trayThread.joinable()) {
+                trayThread.join();
+            }
+            return 0;
+        }
+
+        bool ctrl = (GetAsyncKeyState(VK_CONTROL) & 0x8000) != 0;
+        bool shift = (GetAsyncKeyState(VK_SHIFT) & 0x8000) != 0;
+        bool alt = (GetAsyncKeyState(VK_MENU) & 0x8000) != 0;
+
+        if (ctrl && shift && alt) {
+            char pressedKey = GetPressedAlphaNumericKey();
+            if (pressedKey == '\0') { std::this_thread::sleep_for(std::chrono::milliseconds(15)); continue; }
+            switch (pressedKey) {
+                case '1': soundbiteIndex = 0; break;
+                case '2': soundbiteIndex = 1; break;
+                case '3': soundbiteIndex = 2; break;
+                case '4': soundbiteIndex = 3; break;
+                case '5': soundbiteIndex = 4; break;
+                case 'Q': soundbiteIndex = 5; break;
+                case 'W': soundbiteIndex = 6; break;
+                case 'E': soundbiteIndex = 7; break;
+                case 'R': soundbiteIndex = 8; break;
+                case 'T': soundbiteIndex = 9; break;
+                case 'A': soundbiteIndex = 10; break;
+                case 'S': soundbiteIndex = 11; break;
+                case 'D': soundbiteIndex = 12; break;
+                case 'F': soundbiteIndex = 13; break;
+                case 'G': soundbiteIndex = 14; break;
+                case 'Z': soundbiteIndex = 15; break;
+                case 'X': soundbiteIndex = 16; break;
+                case 'C': soundbiteIndex = 17; break;
+                case 'V': soundbiteIndex = 18; break;
+                case 'B': soundbiteIndex = 19; break;
+                case 'P': soundbiteIndex = -1; g_running.store(false); break;
+                default: continue;
+            }
+            mixer.TriggerSoundbite(soundbiteIndex);
+            std::this_thread::sleep_for(std::chrono::milliseconds(200)); // debounce keypress
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(15));
+    }
+}

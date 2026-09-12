@@ -1,0 +1,3 @@
+#include "../Main/Tray.h"
+
+1 ICON "C:\coding\cpp_soundboard\Resources\logoR.ico"

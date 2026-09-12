@@ -1,0 +1,14 @@
+old_build/
+unused/
+Resources/soundbites/
+Resources/logo/
+Main/SoundboardWindow.*
+.vscode/c_cpp_properties.json
+CMakeLists.txt
+Main.obj
+Tray.obj
+Utils.obj
+WasapiMixer.obj
+soundboard.*
+toggleListen.*
+vc140.pdb
