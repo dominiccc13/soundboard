@@ -14,26 +14,7 @@ int main() {
     // 1. Initialize and declare variables
     std::string soundbiteBasePath = "C:\\coding\\cpp_soundboard\\Resources\\soundbites\\formatted\\";
     std::string soundbitePaths[g_soundbiteCount] = {
-        "mbappe-special.wav", 
-        "windows-xp.wav",  
-        "florida.wav", 
-        "300-million.wav", 
-        "pain.wav", 
-        "chew.wav", 
-        "grenade.wav", 
-        "Turnt-1.wav", 
-        "Turnt-2.wav", 
-        "Turnt-3.wav", 
-        "grenada.wav", 
-        "ac130.wav", 
-        "camping.wav", 
-        "noobtubed.wav", 
-        "", 
-        "dolphin.wav", 
-        "2000-years.wav", 
-        "---", 
-        "dickie-allen.wav", 
-        ""
+        "1.wav", "2.wav", "3.wav", "4.wav", "5.wav"
     };
     WasapiMixer mixer;
     int soundbiteIndex = -1;
