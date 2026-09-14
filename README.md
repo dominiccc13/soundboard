@@ -13,8 +13,9 @@ To play audio through your microphone:
 3. Set your primary recording device to **CABLE Output**.
 
 ## Launching
-1. Open the `Build` folder.
-2. Run `soundboard.exe`.
+1. You made need to adjust soundbiteBasePath in line 1 of the main() function in Main.cpp.
+2. Open the `Build` folder.
+3. Run `soundboard.exe`.
 
 To confirm the application is running, check Task Manager or open the hidden icons menu in the Windows system tray.
 
