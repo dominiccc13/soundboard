@@ -201,8 +201,8 @@ void WasapiMixer::MixLoop() {
                 float* outSamples = reinterpret_cast<float*>(renData);
 
                 // format configuration parameters
-                const UINT32 capChannels = captureChannels; // 4
-                const UINT32 renChannels = renderChannels;   // 2
+                const UINT32 capChannels = captureChannels; 
+                const UINT32 renChannels = renderChannels; 
 
                 float mGain = micGain.load(std::memory_order_relaxed);
                 float wGain = wavGain.load(std::memory_order_relaxed);
@@ -223,8 +223,8 @@ void WasapiMixer::MixLoop() {
                 for (UINT32 frame = 0; frame < capNumFrames; ++frame) {
                     // 1. EXTRACT MIC SAMPLES (4 channels -> 2 channels)
                     // Calculate exact byte offsets using respective channel counts
-                    UINT32 micFrameOffset = frame * capChannels; // Advances by 4 floats
-                    UINT32 outFrameOffset = frame * renChannels; // Advances by 2 floats
+                    UINT32 micFrameOffset = frame * capChannels; 
+                    UINT32 outFrameOffset = frame * renChannels;
 
                     // Capture channels 0 & 1 for Left & Right
                     float micL = micSamples[micFrameOffset + 0] * mGain;

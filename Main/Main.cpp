@@ -12,9 +12,28 @@
 
 int main() {
     // 1. Initialize and declare variables
-    std::string soundbiteBasePath = "C:\\coding\\cpp_soundboard\\Resources\\Test_Soundbites\\";
+    std::string soundbiteBasePath = "C:\\coding\\cpp_soundboard\\Resources\\soundbites\\formatted\\";
     std::string soundbitePaths[g_soundbiteCount] = {
-        "1.wav", "2.wav", "3.wav", "4.wav", "5.wav"
+        "mbappe-special.wav", 
+        "windows-xp.wav",  
+        "florida.wav", 
+        "300-million.wav", 
+        "pain.wav", 
+        "chew.wav", 
+        "grenade.wav", 
+        "Turnt-1.wav", 
+        "Turnt-2.wav", 
+        "Turnt-3.wav", 
+        "grenada.wav", 
+        "ac130.wav", 
+        "camping.wav", 
+        "noobtubed.wav", 
+        "", 
+        "dolphin.wav", 
+        "2000-years.wav", 
+        "---", 
+        "dickie-allen.wav", 
+        ""
     };
     WasapiMixer mixer;
     int soundbiteIndex = -1;
@@ -71,7 +90,22 @@ int main() {
                 case '3': soundbiteIndex = 2; break;
                 case '4': soundbiteIndex = 3; break;
                 case '5': soundbiteIndex = 4; break;
-                case 'Q': soundbiteIndex = -1; g_running.store(false); break;
+                case 'Q': soundbiteIndex = 5; break;
+                case 'W': soundbiteIndex = 6; break;
+                case 'E': soundbiteIndex = 7; break;
+                case 'R': soundbiteIndex = 8; break;
+                case 'T': soundbiteIndex = 9; break;
+                case 'A': soundbiteIndex = 10; break;
+                case 'S': soundbiteIndex = 11; break;
+                case 'D': soundbiteIndex = 12; break;
+                case 'F': soundbiteIndex = 13; break;
+                case 'G': soundbiteIndex = 14; break;
+                case 'Z': soundbiteIndex = 15; break;
+                case 'X': soundbiteIndex = 16; break;
+                case 'C': soundbiteIndex = 17; break;
+                case 'V': soundbiteIndex = 18; break;
+                case 'B': soundbiteIndex = 19; break;
+                case 'P': soundbiteIndex = -1; g_running.store(false); break;
                 default: continue;
             }
             mixer.TriggerSoundbite(soundbiteIndex);
@@ -79,4 +113,4 @@ int main() {
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(15));
     }
-}       
+}
